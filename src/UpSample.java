@@ -16,24 +16,24 @@ import javax.imageio.ImageIO;
 public class UpSample {
 
     public void upSamplePic(String path, int n) throws IOException {
-        //try {
+        
         File input = new File(path);
-        BufferedImage inImage = ImageIO.read(input);
-        int w = inImage.getWidth();
-        int h = inImage.getHeight();
-        int w2 = (w) * 4;
-        int h2 = (h) * 4;
-        BufferedImage outImage = new BufferedImage(w2, h2, BufferedImage.TYPE_BYTE_GRAY);
-        float x_ratio = 0.25f;
-        float y_ratio = 0.25f;
-        for (int i = 0; i < h2; i++) {
-            for (int j = 0; j < w2; j++) {
+        BufferedImage inputImage = ImageIO.read(input);
+        int width = inputImage.getWidth();
+        int height = inputImage.getHeight();
+        int widthN = (width) * 4;
+        int heightN = (height) * 4;
+        BufferedImage outputImage = new BufferedImage(widthN, heightN, BufferedImage.TYPE_BYTE_GRAY);
+        float ratioX = 0.25f;
+        float ratioY = 0.25f;
+        for (int i = 0; i < heightN; i++) {
+            for (int j = 0; j < widthN; j++) {
                 int gray = 0;
-                if (j * x_ratio < w && i * y_ratio < h) {
-                    gray = inImage.getRGB((int) (j * x_ratio), (int) (i * y_ratio));
+                if (j * ratioX < width && i * ratioY < height) {
+                    gray = inputImage.getRGB((int) (j * ratioX), (int) (i * ratioY));
                 }
                 int val = (255 << 24) | (gray << 16) | (gray << 8) | gray;
-                outImage.setRGB(j, i, val);
+                outputImage.setRGB(j, i, val);
             }
 
         }
@@ -45,10 +45,7 @@ public class UpSample {
             output = new File("3-UpSampled/UP Sampled - " + n + ".png");
         }
 
-        ImageIO.write(outImage, "gif", output);
-
-//        File ouptut = new File(path.replaceFirst("in", "out"));
-//        ImageIO.write(outImage, "gif", ouptut);
+        ImageIO.write(outputImage, "png", output);
     }
 
     static public void main(String args[]) throws Exception {

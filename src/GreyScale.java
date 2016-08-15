@@ -20,19 +20,19 @@ public class GreyScale {
     public void convertToGreyScale(String path,int n) {
         try {
             File input = new File(path);
-            BufferedImage inImage = ImageIO.read(input);
-            int width = inImage.getWidth();
-            int height = inImage.getHeight();
-            BufferedImage outImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+            BufferedImage inputImage = ImageIO.read(input);
+            int width = inputImage.getWidth();
+            int height = inputImage.getHeight();
+            BufferedImage outputImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
-                    Color c = new Color(inImage.getRGB(j, i));
+                    Color c = new Color(inputImage.getRGB(j, i));
                     int red = (int) (c.getRed() * 0.299);
                     int green = (int) (c.getGreen() * 0.587);
                     int blue = (int) (c.getBlue() * 0.114);
                     Color newColor = new Color(red + green + blue,
                             red + green + blue, red + green + blue);
-                    outImage.setRGB(j, i, newColor.getRGB());
+                    outputImage.setRGB(j, i, newColor.getRGB());
                 }
             }
 
@@ -43,7 +43,7 @@ public class GreyScale {
                 output = new File("2-GreyScaled/"+"Grey - " + n + ".png");
             }
 
-            ImageIO.write(outImage, "gif", output);
+            ImageIO.write(outputImage, "png", output);
 
         } catch (Exception e) {
         }

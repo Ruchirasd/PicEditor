@@ -9,68 +9,58 @@ import javax.imageio.ImageIO;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author ruchiras
  */
 public class DownSample {
-    
-    public void downSamplePic(String path,int n) throws IOException {
-        //try {
-            File input = new File(path);
-            BufferedImage inImage = ImageIO.read(input);
-            int w = inImage.getWidth();
-            int h = inImage.getHeight();
-            int w2 = (w)/4;
-            int h2 = (h)/4;
-            BufferedImage outImage = new BufferedImage(w2, h2, BufferedImage.TYPE_BYTE_GRAY);
-            int x_ratio = 4;
-            int y_ratio = 4;
-            for (int i = 0; i < h2; i++) {
-                for (int j = 0; j < w2; j++) {
-                    int gray=0;
-                    for (int k = 0; k < x_ratio; k++) {
-                        for (int l = 0; l < y_ratio; l++) {
-                            if(j*x_ratio+k<w && i*y_ratio+l<h){
-                                int val = inImage.getRGB(j*x_ratio+k, i*y_ratio+l);
-                                //System.out.println(""+Integer.toBinaryString(val));
-                                val= val & 255;
-                                gray+=val;
-                            }
+
+    public void downSamplePic(String path, int n) throws IOException {
+
+        File input = new File(path);
+        BufferedImage inputImage = ImageIO.read(input);
+        int width = inputImage.getWidth();
+        int height = inputImage.getHeight();
+        int widthN = (width) / 4;
+        int heightN = (height) / 4;
+        BufferedImage outImage = new BufferedImage(widthN, heightN, BufferedImage.TYPE_BYTE_GRAY);
+        int ratioX = 4; // ratioX = width/widthN
+        int ratioY = 4; // ratioY = height/heightN
+        for (int i = 0; i < heightN; i++) {
+            for (int j = 0; j < widthN; j++) {
+                int gray = 0;
+                for (int k = 0; k < ratioX; k++) {
+                    for (int l = 0; l < ratioY; l++) {
+                        if (j * ratioX + k < width && i * ratioY + l < height) {
+                            int val = inputImage.getRGB(j * ratioX + k, i * ratioY + l);
+                            val = val & 255;
+                            gray += val;
                         }
                     }
-                    gray/=x_ratio*y_ratio;
-                    int val= (255<<24) | (gray<<16) | (gray<<8) | gray;
-                    outImage.setRGB(j, i, val);
                 }
+                gray /= ratioX * ratioY;
+                int val = (255 << 24) | (gray << 16) | (gray << 8) | gray;
+                outImage.setRGB(j, i, val);
             }
-            System.out.println(""+Integer.toBinaryString(inImage.getRGB(0, 0)));
-            System.out.println(""+Integer.toBinaryString(outImage.getRGB(0, 0)));
-            
-            File output = null;
-            if (n == 0) {
-                output = new File("3-DownSampled/DownSampled.png");
-            } else {
-                output = new File("3-DownSampled/Down Sampled - " + n + ".png");
-            }
+        }
+        System.out.println("" + Integer.toBinaryString(inputImage.getRGB(0, 0)));
+        System.out.println("" + Integer.toBinaryString(outImage.getRGB(0, 0)));
 
-            ImageIO.write(outImage, "gif", output);
-            
-            
-//            File ouptut = new File(path.replaceFirst("in", "out"));
-//            ImageIO.write(outImage, "gif", ouptut);
+        File output = null;
+        if (n == 0) {
+            output = new File("3-DownSampled/DownSampled.png");
+        } else {
+            output = new File("3-DownSampled/Down Sampled - " + n + ".png");
+        }
 
-        //} catch (Exception e) {
-            //System.out.println(""+e.getMessage());
-        //}
+        ImageIO.write(outImage, "png", output);
+
     }
-static public void main(String args[]) throws Exception {
-    DownSample ds = new DownSample();
+
+    static public void main(String args[]) throws Exception {
+        DownSample ds = new DownSample();
         for (int i = 1; i < 6; i++) {
-            ds.downSamplePic("1-Original/"+i + ".jpg",i);
+            ds.downSamplePic("1-Original/" + i + ".jpg", i);
         }
     }
 }
-
-    
